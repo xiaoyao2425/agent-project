@@ -1,0 +1,12 @@
+{
+    // WSL 专用配置
+    "remote.WSL.fileWatcher.polling": true,
+    "remote.WSL.fileWatcher.interval": 1000,
+    "remote.WSL.showWelcome": false,
+    
+    // 在 WSL 中安装的扩展
+    "remote.extensionKind": {
+        "mshr.verilog": ["wsl"],
+        "ms-vscode.cpptools": ["wsl"]
+    }
+}

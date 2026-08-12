@@ -1,0 +1,57 @@
+{
+    // ========== Verilog 相关 ==========
+    "verilog.ctags.path": "/usr/bin/ctags",
+    "verilog.iverilog.path": "/usr/bin/iverilog",
+    "verilog.vvp.path": "/usr/bin/vvp",
+    "verilog.linting.iverilog.enable": true,
+    "verilog.linting.iverilog.path": "/usr/bin/iverilog",
+    
+    // ========== WSL 远程连接 ==========
+    "remote.SSH.connectTimeout": 60,
+    "remote.SSH.keepAlive": true,
+    "remote.SSH.keepAliveInterval": 30,
+    "remote.downloadExtensionsLocally": true,
+    "remote.autoForwardPorts": false,
+    
+    // ========== 文件编码和换行符 ==========
+    "files.encoding": "utf8",
+    "files.eol": "\n",  // LF 换行，避免 Windows CRLF 问题
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    
+    // ========== 终端 ==========
+    "terminal.integrated.defaultProfile.windows": "Ubuntu (WSL)",
+    "terminal.integrated.profiles.windows": {
+        "Ubuntu (WSL)": {
+            "path": "wsl.exe",
+            "args": ["-d", "Ubuntu"]
+        }
+    },
+    
+    // ========== Git ==========
+    "git.enableSmartCommit": true,
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.inputValidation": true,
+    
+    // ========== 编辑器 ==========
+    "editor.renderWhitespace": "all",
+    "editor.renderControlCharacters": true,
+    "files.autoSave": "onFocusChange",
+    "editor.formatOnSave": true,
+    
+    // ========== 语言特定 ==========
+    "[verilog]": {
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true
+    },
+    
+    // ========== 排除不需要的文件 ==========
+    "files.exclude": {
+        "**/*.vcd": true,
+        "**/*.vvp": true,
+        "**/tb_mux": true,
+        "**/__pycache__": true,
+        "**/*.pyc": true
+    }
+}
