@@ -1,0 +1,10 @@
+# 仿真工具链路径配置
+tools:
+  iverilog: /usr/bin/iverilog
+  vvp: /usr/bin/vvp             
+  gtkwave: /usr/bin/gtkwave      
+
+# 仿真参数配置
+simulation:
+  timeout: 10               # 仿真超时时间（秒）       
+  waveform_file: wave.vcd       
