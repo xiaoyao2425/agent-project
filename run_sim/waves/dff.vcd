@@ -1,5 +1,9 @@
 $date
+<<<<<<< HEAD
 	Mon Sep 07 20:10:12 2026
+=======
+	Thu Aug 13 01:38:59 2026
+>>>>>>> a24656fd7fec120ba93a23306a54b964adc553e1
 $end
 $version
 	Icarus Verilog
@@ -20,6 +24,12 @@ $var reg 1 ! q $end
 $upscope $end
 $upscope $end
 $enddefinitions $end
+<<<<<<< HEAD
+=======
+$comment Show the parameter values. $end
+$dumpall
+$end
+>>>>>>> a24656fd7fec120ba93a23306a54b964adc553e1
 #0
 $dumpvars
 0$

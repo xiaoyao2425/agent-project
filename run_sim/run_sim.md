@@ -1,6 +1,10 @@
 # RTL 仿真自动化工具 (run_sim.py)
 ## 基础元信息
+<<<<<<< HEAD
 开发语言： Python
+=======
+开发语言： Python 
+>>>>>>> a24656fd7fec120ba93a23306a54b964adc553e1
 
 ## 1. 模块概述
 一句话定位：run_sim.py 是一个用于自动编译 Verilog 文件并生成波形的 Python 脚本；
@@ -58,6 +62,7 @@ run_sim.py	    主脚本，包含编译仿真核心逻辑
 
 ### 🟢 可选板块 B：Python 算法 / 脚本模块追加
 ## 7. 输入输出规范
+<<<<<<< HEAD
 参数	    类型	必填   说明
 top_name	str	   ✅	顶层模块名，用于命名输出文件
 testbench	str	   ✅	testbench 文件路径（如 tb_mux.v）
@@ -66,6 +71,16 @@ wave_dir	str	   ❌	波形存放目录，默认 ./waves
 wave_file	str	   ❌	波形完整路径，默认自动生成
 gtkwave	    bool   ❌	是否自动打开 GTKWave，默认 False
 verbose	    bool   ❌	是否打印详细信息，默认 True
+=======
+参数	类型	必填	说明
+top_name	str	✅	顶层模块名，用于命名输出文件
+testbench	str	✅	testbench 文件路径（如 tb_mux.v）
+dut_files	list	❌	DUT 文件列表（如 ["mux.v", "adder.v"]）
+wave_dir	str	❌	波形存放目录，默认 ./waves
+wave_file	str	❌	波形完整路径，默认自动生成
+gtkwave	bool	❌	是否自动打开 GTKWave，默认 False
+verbose	bool	❌	是否打印详细信息，默认 True
+>>>>>>> a24656fd7fec120ba93a23306a54b964adc553e1
 数据格式要求：
 文件路径支持相对路径和绝对路径
 文件必须为 .v 或 .sv 格式（Verilog/SystemVerilog）
@@ -90,4 +105,8 @@ GTKWave 启动：通过 subprocess.Popen() 异步启动，不阻塞主流程
 dut_files 顺序必须符合依赖关系（如 DFF 需在 Counter 之前）
 testbench 中必须包含波形导出代码（$dumpfile/$dumpvars）
 编译/仿真超时后直接终止，不会清理临时文件
+<<<<<<< HEAD
 批量仿真为串行执行，不支持并行
+=======
+批量仿真为串行执行，不支持并行
+>>>>>>> a24656fd7fec120ba93a23306a54b964adc553e1
