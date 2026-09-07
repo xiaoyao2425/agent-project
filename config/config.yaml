@@ -1,8 +1,8 @@
 # 仿真工具链路径配置
 tools:
-  iverilog: /usr/bin/iverilog
-  vvp: /usr/bin/vvp             
-  gtkwave: /usr/bin/gtkwave      
+  iverilog: D:/iverilog/bin/iverilog.exe
+  vvp: D:/iverilog/bin/vvp.exe
+  gtkwave: D:/iverilog/bin/gtkwave.exe
 
 # 仿真参数配置
 simulation:
