@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "../run_sim"
+		},
+		{
+			"path": "../../../数模/比赛/Mrite-main"
+		}
+	],
+	"settings": {
+		"remote.WSL.fileWatcher.polling": true,
+		"remote.extensionKind": {
+			"mshr.verilog": [
+				"wsl"
+			],
+			"ms-vscode.cpptools": [
+				"wsl"
+			]
+		}
+	}
+}

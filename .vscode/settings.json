@@ -1,51 +1,42 @@
 {
-    // ========== Verilog 相关 ==========
-    "verilog.ctags.path": "/usr/bin/ctags",
-    "verilog.iverilog.path": "/usr/bin/iverilog",
-    "verilog.vvp.path": "/usr/bin/vvp",
+    // ========== Python 解释器（固定为已安装 PyYAML 的 3.13，勿选 uv 管理的 3.14） ==========
+    "python.defaultInterpreterPath": "C:\\Users\\xiaoyaohu\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+
+    // ========== Verilog（Windows 本地路径） ==========
+    "verilog.ctags.path": "D:\\iverilog\\bin\\ctags.exe",
+    "verilog.iverilog.path": "D:\\iverilog\\bin\\iverilog.exe",
+    "verilog.vvp.path": "D:\\iverilog\\bin\\vvp.exe",
     "verilog.linting.iverilog.enable": true,
-    "verilog.linting.iverilog.path": "/usr/bin/iverilog",
-    
-    // ========== WSL 远程连接 ==========
-    "remote.SSH.connectTimeout": 60,
-    "remote.SSH.keepAlive": true,
-    "remote.SSH.keepAliveInterval": 30,
-    "remote.downloadExtensionsLocally": true,
-    "remote.autoForwardPorts": false,
-    
+    "verilog.linting.iverilog.path": "D:\\iverilog\\bin\\iverilog.exe",
+
+    // ========== 终端（PowerShell 为默认，不再强制 WSL） ==========
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+
     // ========== 文件编码和换行符 ==========
     "files.encoding": "utf8",
-    "files.eol": "\n",  // LF 换行，避免 Windows CRLF 问题
+    "files.eol": "\n",
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
-    
-    // ========== 终端 ==========
-    "terminal.integrated.defaultProfile.windows": "Ubuntu (WSL)",
-    "terminal.integrated.profiles.windows": {
-        "Ubuntu (WSL)": {
-            "path": "wsl.exe",
-            "args": ["-d", "Ubuntu"]
-        }
-    },
-    
+
     // ========== Git ==========
     "git.enableSmartCommit": true,
     "git.autofetch": true,
     "git.confirmSync": false,
     "git.inputValidation": true,
-    
+
     // ========== 编辑器 ==========
     "editor.renderWhitespace": "all",
     "editor.renderControlCharacters": true,
     "files.autoSave": "onFocusChange",
     "editor.formatOnSave": true,
-    
+
     // ========== 语言特定 ==========
     "[verilog]": {
         "editor.tabSize": 4,
         "editor.insertSpaces": true
     },
-    
+
     // ========== 排除不需要的文件 ==========
     "files.exclude": {
         "**/*.vcd": true,

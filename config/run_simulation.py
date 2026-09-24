@@ -9,14 +9,16 @@ import subprocess
 import sys
 from pathlib import Path
 
+# 脚本所在目录（无论从哪个工作目录启动都以此为基准）
+SCRIPT_DIR = Path(__file__).resolve().parent
+
 def load_config():
     """
     加载配置文件
     关键：用 __file__ 定位脚本所在目录，确保无论从哪里执行都能找到config.yaml
     """
     # 获取脚本所在目录
-    script_dir = Path(__file__).parent
-    config_path = script_dir / "config.yaml"
+    config_path = SCRIPT_DIR / "config.yaml"
     
     # 检查文件是否存在
     if not config_path.exists():
@@ -24,7 +26,7 @@ def load_config():
             f"❌ 配置文件不存在: {config_path}\n"
             f"   请确保 config.yaml 在 {script_dir} 目录下"
         )
-    
+
     # 读取并解析YAML
     try:
         with open(config_path, "r", encoding='utf-8') as f:
@@ -34,35 +36,37 @@ def load_config():
     except yaml.YAMLError as e:
         raise RuntimeError(f"❌ YAML格式错误: {e}")
 
-def run_iverilog(sources, output_file="simv", config=None):
+def run_iverilog(sources, output_file="simv", config=None, cwd=None):
     """
     编译Verilog源文件
-    sources: 源文件列表，如 ["cpu.v", "memory.v", "tb_top.v"]
-    output_file: 输出的可执行文件名
+    sources: 源文件路径列表（绝对路径），如 ["cpu.v", "memory.v", "tb_top.v"]
+    output_file: 输出的可执行文件路径
+    cwd: 编译工作目录（testbench 中的相对路径以此为基准）
     """
     iverilog_path = config["tools"]["iverilog"]
-    command = [iverilog_path, "-o", output_file] + sources
+    command = [iverilog_path, "-o", str(output_file)] + [str(s) for s in sources]
     print(f"🔨 编译: {' '.join(command)}")
-    
+
     try:
-        subprocess.run(command, check=True)
+        subprocess.run(command, check=True, cwd=cwd)
         print("✅ 编译成功")
         return True
     except subprocess.CalledProcessError as e:
         print(f"❌ 编译失败: {e}")
         return False
 
-def run_vvp(simv_file="simv", timeout=None, config=None):
+def run_vvp(simv_file="simv", timeout=None, config=None, cwd=None):
     """
     运行仿真，带超时保护
     timeout: 超时秒数，从config读取
+    cwd: 仿真工作目录（$dumpfile 的相对路径以此为基准）
     """
     vvp_path = config["tools"]["vvp"]
-    command = [vvp_path, simv_file]
+    command = [vvp_path, str(simv_file)]
     print(f"⚡ 仿真: {' '.join(command)} (超时={timeout}秒)")
-    
+
     try:
-        subprocess.run(command, check=True, timeout=timeout)
+        subprocess.run(command, check=True, timeout=timeout, cwd=cwd)
         print("✅ 仿真正常结束")
         return True
     except subprocess.TimeoutExpired:
@@ -106,27 +110,43 @@ def main():
     print(f"   gtkwave: {config['tools']['gtkwave']}")
     print(f"   timeout: {config['simulation']['timeout']}秒")
     print(f"   波形文件: {config['simulation']['waveform_file']}")
-    
+
     # 3. 获取仿真参数
     timeout = config["simulation"]["timeout"]
     waveform_file = config["simulation"]["waveform_file"]
-    
-    # 4. 执行编译（示例：编译你的Verilog文件）
+
+    # 源文件目录：相对 config.yaml 解析为绝对路径，避免依赖启动时的工作目录
+    source_dir = (SCRIPT_DIR / config["simulation"].get("source_dir", ".")).resolve()
+    print(f"   源文件目录: {source_dir}")
+    if not source_dir.is_dir():
+        print(f"❌ 源文件目录不存在: {source_dir}")
+        sys.exit(1)
+
+    # 4. 执行编译（testbench 必须包含在内，否则 iverilog 报 No top level modules）
     # 注意：这里需要根据你的实际文件名修改
-    sources = ["mux.v", "counter.v", "dff.v"]  # ← 改成你的实际文件名
-    if not run_iverilog(sources, output_file="simv", config=config):
+    sources = ["mux.v", "tb_mux.v"]  # ← 改成你的实际文件名（最后一个为 testbench）
+    src_paths = [source_dir / name for name in sources]
+    missing = [p for p in src_paths if not p.exists()]
+    if missing:
+        print("❌ 以下源文件不存在:")
+        for p in missing:
+            print(f"   - {p}")
         sys.exit(1)
-    
-    # 5. 执行仿真
-    if not run_vvp("simv", timeout=timeout, config=config):
+
+    simv_path = source_dir / "simv"
+    if not run_iverilog(src_paths, output_file=simv_path, config=config, cwd=source_dir):
         sys.exit(1)
-    
+
+    # 5. 执行仿真（cwd=源文件目录，保证 testbench 里 $dumpfile 的相对路径正确）
+    if not run_vvp(simv_path, timeout=timeout, config=config, cwd=source_dir):
+        sys.exit(1)
+
     # 6. 检查波形文件
-    waveform_path = Path(waveform_file)
+    waveform_path = source_dir / waveform_file
     if waveform_path.exists():
         print(f"✅ 波形文件已生成: {waveform_path}")
         # 可选：自动打开波形
-        # open_waveform(waveform_file, config=config)
+        # open_waveform(waveform_path, config=config)
     else:
         print(f"⚠️  波形文件未生成: {waveform_path}")
     

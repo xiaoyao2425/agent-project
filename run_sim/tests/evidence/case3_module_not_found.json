@@ -1,0 +1,24 @@
+{
+  "status": "fail",
+  "data": null,
+  "error": {
+    "error_id": "001",
+    "error_type": "compile",
+    "severity": "error",
+    "code": "RTL-COMPILE-0001",
+    "file": "tb_bad_module.v",
+    "line": 7,
+    "module_name": null,
+    "message": "D:\\Users\\xiaoyaohu\\Desktop\\项目\\ai-agent\\run_sim\\tests\\tb_bad_module.v:7: error: Unknown module type: nonexistent_mod",
+    "column": null,
+    "code_snippet": "nonexistent_mod u_missing (.a(a), .b(b), .y(y));",
+    "suggestion": "找不到模块：tb_bad_module.v 第 7 行例化了一个不存在的模块（检查模块名拼写，或编译时是否漏加了它的 .v 文件）"
+  },
+  "meta": {
+    "timestamp": "2026-09-22T16:02:57.371381+00:00",
+    "version": "2.0",
+    "top_name": "bad_module",
+    "testbench": "tests/tb_bad_module.v",
+    "latency_ms": 137
+  }
+}

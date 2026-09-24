@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """
 RTL 仿真自动化工具 - 给命令行装上 Python 大脑
-作者：你的名字
-日期：2026-08-13
 功能：自动编译 Verilog 文件并生成波形
 """
 
@@ -11,6 +9,9 @@ import os
 import sys
 from pathlib import Path
 from datetime import datetime
+
+# 脚本所在目录：所有相对路径都以此为基准，确保从任意工作目录启动都能找到文件
+SCRIPT_DIR = Path(__file__).resolve().parent
 
 def compile_and_run(
     top_name: str,
@@ -23,7 +24,7 @@ def compile_and_run(
 ) -> bool:
     """
     编译并运行 Verilog 仿真
-    
+
     参数:
         top_name: 顶层模块名（用于命名输出文件）
         testbench: testbench 文件路径
@@ -32,21 +33,39 @@ def compile_and_run(
         wave_file: 波形文件完整路径（如果不指定，自动生成）
         gtkwave: 是否自动打开 GTKWave
         verbose: 是否打印详细信息
-    
+
     返回:
         True: 成功，False: 失败
     """
     
-    # 1. 参数初始化
+    # 1. 参数初始化（相对路径一律解析到脚本所在目录，与启动目录无关）
     if dut_files is None:
         dut_files = []
-    
+
+    testbench_p = Path(testbench)
+    if not testbench_p.is_absolute():
+        testbench_p = SCRIPT_DIR / testbench_p
+    testbench = str(testbench_p)
+
+    dut_files = [
+        str(Path(f) if Path(f).is_absolute() else SCRIPT_DIR / f)
+        for f in dut_files
+    ]
+
+    wave_dir_p = Path(wave_dir)
+    if not wave_dir_p.is_absolute():
+        wave_dir_p = SCRIPT_DIR / wave_dir_p
+
     # 如果 wave_file 没指定，自动生成
     if wave_file is None:
-        wave_file = f"{wave_dir}/{top_name}.vcd"
-    
+        wave_file = str(wave_dir_p / f"{top_name}.vcd")
+    elif not Path(wave_file).is_absolute():
+        wave_file = str(SCRIPT_DIR / wave_file)
+
     # 2. 创建波形目录
-    Path(wave_dir).mkdir(parents=True, exist_ok=True)
+    wave_dir_p.mkdir(parents=True, exist_ok=True)
+    # 编译产物统一放 output/，不堆在脚本根目录
+    (SCRIPT_DIR / "output").mkdir(parents=True, exist_ok=True)
     
     # 3. 确保文件存在
     if not Path(testbench).exists():
@@ -58,8 +77,8 @@ def compile_and_run(
             print(f"[错误] DUT 文件不存在: {dut}")
             return False
     
-    # 4. 组装编译命令
-    sim_exe = f"sim_{top_name}"
+    # 4. 组装编译命令（可执行文件输出到 output/ 目录）
+    sim_exe = str(SCRIPT_DIR / "output" / f"sim_{top_name}")
     compile_cmd = ["iverilog", "-o", sim_exe, "-Wall"]
     
     # 添加 DUT 文件（确保 testbench 在最后）
@@ -78,10 +97,14 @@ def compile_and_run(
             compile_cmd,
             capture_output=True,
             text=True,
-            timeout=30  # 30秒超时
+            timeout=30,  # 30秒超时
+            cwd=SCRIPT_DIR
         )
     except subprocess.TimeoutExpired:
         print("[错误] 编译超时（30秒）")
+        return False
+    except FileNotFoundError:
+        print("[错误] 未找到 iverilog，请确认 Icarus Verilog 已安装并加入 PATH")
         return False
     
     # 检查编译结果
@@ -105,10 +128,14 @@ def compile_and_run(
             ["vvp", sim_exe],          # 用 vvp 来执行 sim_mux
             capture_output=True,
             text=True,
-            timeout=60
-)
+            timeout=60,
+            cwd=SCRIPT_DIR
+        )
     except subprocess.TimeoutExpired:
         print("[错误] 仿真超时（60秒）")
+        return False
+    except FileNotFoundError:
+        print("[错误] 未找到 vvp，请确认 Icarus Verilog 已安装并加入 PATH")
         return False
     
     if result.returncode != 0:
@@ -199,34 +226,34 @@ if __name__ == "__main__":
     print("【方式1】单个模块运行")
     compile_and_run(
         top_name="mux",
-        testbench="tb_mux.v",
-        dut_files=["mux.v"],
+        testbench="tb/tb_mux.v",
+        dut_files=["design/mux.v"],
         gtkwave=False,
         verbose=True
     )
-    
+
     # 方式2：批量运行（推荐）
     print("\n\n【方式2】批量运行所有模块")
     modules = [
         {
             "name": "多路器",
             "top_name": "mux",
-            "testbench": "tb_mux.v",
-            "dut_files": ["mux.v"],
+            "testbench": "tb/tb_mux.v",
+            "dut_files": ["design/mux.v"],
             "show_wave": True  # 只对多路器打开波形
         },
         {
             "name": "D触发器",
             "top_name": "dff",
-            "testbench": "tb_dff.v",
-            "dut_files": ["dff.v"],
+            "testbench": "tb/tb_dff.v",
+            "dut_files": ["design/dff.v"],
             "show_wave": False
         },
         {
             "name": "计数器",
             "top_name": "counter",
-            "testbench": "tb_counter.v",
-            "dut_files": ["dff.v", "counter.v"],  # 注意依赖关系
+            "testbench": "tb/tb_counter.v",
+            "dut_files": ["design/dff.v", "design/counter.v"],  # 注意依赖关系
             "show_wave": False
         }
     ]

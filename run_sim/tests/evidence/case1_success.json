@@ -1,0 +1,19 @@
+{
+  "status": "success",
+  "data": {
+    "output": "VCD info: dumpfile waves/mux.vcd opened for output.\r\ntime=0, a=0, b=0, sel=0, y=0\r\ntime=10000, a=1, b=0, sel=0, y=1\r\ntime=20000, a=0, b=1, sel=0, y=0\r\ntime=30000, a=1, b=1, sel=1, y=1\r\ntime=40000, a=0, b=0, sel=1, y=0",
+    "metrics": {
+      "latency_ms": 173,
+      "wave_file": "D:\\Users\\xiaoyaohu\\Desktop\\项目\\ai-agent\\run_sim\\waves\\mux.vcd",
+      "wave_size_bytes": 500
+    }
+  },
+  "error": null,
+  "meta": {
+    "timestamp": "2026-09-22T16:02:56.987406+00:00",
+    "version": "2.0",
+    "top_name": "mux",
+    "testbench": "D:\\Users\\xiaoyaohu\\Desktop\\项目\\ai-agent\\run_sim\\tb\\tb_mux.v",
+    "latency_ms": 173
+  }
+}

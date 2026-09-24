@@ -1,0 +1,24 @@
+{
+  "status": "fail",
+  "data": null,
+  "error": {
+    "error_id": "001",
+    "error_type": "syntax",
+    "severity": "error",
+    "code": "RTL-SYNTAX-0001",
+    "file": "bad_syntax.v",
+    "line": 8,
+    "module_name": null,
+    "message": "D:\\Users\\xiaoyaohu\\Desktop\\项目\\ai-agent\\run_sim\\tests\\bad_syntax.v:8: syntax error",
+    "column": null,
+    "code_snippet": "endmodule",
+    "suggestion": "语法错误：bad_syntax.v 第 8 行附近写法不合法（最常见原因：少了分号、begin/end 不配对、括号不匹配）"
+  },
+  "meta": {
+    "timestamp": "2026-09-22T16:02:57.173665+00:00",
+    "version": "2.0",
+    "top_name": "bad_syntax",
+    "testbench": "tests/tb_bad_syntax.v",
+    "latency_ms": 109
+  }
+}

@@ -6,5 +6,6 @@ tools:
 
 # 仿真参数配置
 simulation:
-  timeout: 10               # 仿真超时时间（秒）       
-  waveform_file: wave.vcd       
+  timeout: 10               # 仿真超时时间（秒）
+  source_dir: ../run_sim    # Verilog 源文件目录（相对本配置文件）
+  waveform_file: waves/mux.vcd  # 波形文件（相对 source_dir）
