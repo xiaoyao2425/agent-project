@@ -1,0 +1,3 @@
+syntax_demo_b.v:22: error: Unable to bind wire/reg/memory `ens' in `counter'
+syntax_demo_b.v:22: error: Unable to elaborate condition expression.
+2 error(s) during elaboration.

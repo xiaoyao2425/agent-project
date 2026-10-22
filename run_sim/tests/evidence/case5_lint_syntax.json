@@ -1,0 +1,44 @@
+{
+  "status": "fail",
+  "data": {
+    "source_file": "D:\\Users\\xiaoyaohu\\Desktop\\项目\\ai-agent\\run_sim\\tests\\bad_syntax.v",
+    "linter": "iverilog-fallback",
+    "lint_errors": [
+      {
+        "line": 8,
+        "column": null,
+        "rule": "syntax",
+        "severity": "error",
+        "file": "bad_syntax.v",
+        "message": "D:\\Users\\xiaoyaohu\\Desktop\\项目\\ai-agent\\run_sim\\tests\\bad_syntax.v:8: syntax error",
+        "code_snippet": "endmodule",
+        "suggestion": "语法错误：bad_syntax.v 第 8 行附近写法不合法（最常见原因：少了分号、begin/end 不配对、括号不匹配；注意工具报错行可能在真正出错行的下一行，应向上回溯找未闭合语句）"
+      }
+    ],
+    "metrics": {
+      "latency_ms": 244,
+      "errors": 1,
+      "warnings": 0
+    },
+    "note": "iverilog 降级模式：仅语法级检查，位宽/未驱动等语义问题查不出；建议安装 verilator（WSL: sudo apt install verilator），装好后本模块自动升级为语义级检查"
+  },
+  "error": {
+    "error_id": "001",
+    "error_type": "syntax",
+    "severity": "error",
+    "code": "RTL-SYNTAX-0001",
+    "file": "bad_syntax.v",
+    "line": 8,
+    "module_name": null,
+    "message": "D:\\Users\\xiaoyaohu\\Desktop\\项目\\ai-agent\\run_sim\\tests\\bad_syntax.v:8: syntax error",
+    "column": null,
+    "code_snippet": "endmodule",
+    "suggestion": "语法错误：bad_syntax.v 第 8 行附近写法不合法（最常见原因：少了分号、begin/end 不配对、括号不匹配；注意工具报错行可能在真正出错行的下一行，应向上回溯找未闭合语句）"
+  },
+  "meta": {
+    "timestamp": "2026-10-22T01:53:36.682166+00:00",
+    "version": "1.0",
+    "source_file": "D:\\Users\\xiaoyaohu\\Desktop\\项目\\ai-agent\\run_sim\\tests\\bad_syntax.v",
+    "latency_ms": 244
+  }
+}

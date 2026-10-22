@@ -1,0 +1,4 @@
+VCD info: dumpfile timeout_demo.vcd opened for output.
+time=0 valid=0 ready=0 data_out=00
+time=30000 valid=1 ready=0 data_out=00
+FATAL: TIMEOUT - valid && ready handshake never completed within 10000 ns (module timeout_demo_tb, line 41)

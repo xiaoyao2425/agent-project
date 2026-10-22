@@ -1,0 +1,21 @@
+{
+  "status": "pass",
+  "data": {
+    "source_file": "D:\\Users\\xiaoyaohu\\Desktop\\项目\\ai-agent\\run_sim\\design\\mux.v",
+    "linter": "iverilog-fallback",
+    "lint_errors": [],
+    "metrics": {
+      "latency_ms": 278,
+      "errors": 0,
+      "warnings": 0
+    },
+    "note": "iverilog 降级模式：仅语法级检查，位宽/未驱动等语义问题查不出；建议安装 verilator（WSL: sudo apt install verilator），装好后本模块自动升级为语义级检查"
+  },
+  "error": null,
+  "meta": {
+    "timestamp": "2026-10-22T01:53:36.358974+00:00",
+    "version": "1.0",
+    "source_file": "D:\\Users\\xiaoyaohu\\Desktop\\项目\\ai-agent\\run_sim\\design\\mux.v",
+    "latency_ms": 278
+  }
+}

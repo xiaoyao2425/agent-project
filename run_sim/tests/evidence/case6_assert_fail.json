@@ -1,0 +1,24 @@
+{
+  "status": "fail",
+  "data": null,
+  "error": {
+    "error_id": "001",
+    "error_type": "assertion",
+    "severity": "error",
+    "code": "RTL-ASSERT-0001",
+    "file": null,
+    "line": null,
+    "module_name": null,
+    "message": "tb functional self-check failed: VCD info: dumpfile waves/tb_fail_demo.vcd opened for output.\nFAIL: expect o==0 but got 1",
+    "column": null,
+    "code_snippet": null,
+    "suggestion": "功能自检失败：仿真正常跑完，但 tb 输出里没有 PASS 或出现了 FAIL/Error（判定规则：有 PASS 且无 FAIL/Error，或正常结束且无 FAIL）；请检查 tb 断言条件与 valid/ready 握手时序"
+  },
+  "meta": {
+    "timestamp": "2026-10-22T02:25:42.246405+00:00",
+    "version": "2.1",
+    "top_name": "fail_demo",
+    "testbench": "tests/tb_fail_demo.v",
+    "latency_ms": 169
+  }
+}
