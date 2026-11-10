@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+
+# Windows 下载标记文件
+*Zone.Identifier
+
+# 仿真输出
+*.vcd
+run_sim/output/
+config/simv
+config/debug.log

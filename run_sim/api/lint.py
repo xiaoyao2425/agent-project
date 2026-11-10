@@ -145,8 +145,10 @@ def _to_wsl_path(p: Path) -> str:
 _MSG_RE = re.compile(
     r"^%(?P<sev>Error|Warning|Fatal)(?:-(?P<rule>[A-Za-z][A-Za-z0-9_]*))?"
     r":\s*(?P<rest>.*)$")
+# 文件段不能排除冒号：Windows 绝对路径带盘符（D:\...），非贪婪匹配
+# 配合后面的 :\d+ 定位段回溯出完整文件名
 _LOC_RE = re.compile(
-    r"^(?P<file>[^:\n]+?):(?P<line>\d+)(?:[.:](?P<col>\d+))?:\s*(?P<msg>.+)$")
+    r"^(?P<file>.+?):(?P<line>\d+)(?:[.:](?P<col>\d+))?:\s*(?P<msg>.+)$")
 
 _SEV_MAP = {"Error": "error", "Warning": "warn", "Fatal": "fatal"}
 
@@ -209,6 +211,11 @@ def _parse_verilator(text: str, snippet_map: dict):
             msg = lm.group("msg").strip()
         else:  # 无文件定位的全局错误（如命令行参数问题）
             file_b, line_no, col, msg = None, None, None, rest.strip()
+
+        # Verilator 的收尾行（"Exiting due to N warning(s)" / "Cannot continue"）
+        # 是汇总不是新问题：过滤掉，否则会把纯 warn 的文件误判成 fail
+        if re.match(r"(Exiting due to|Cannot continue)\b", msg):
+            continue
 
         rule = m.group("rule")
         if rule is None:
@@ -287,7 +294,9 @@ def _verdict(issues):
 # ======================================================================
 def _lint_verilator(src, extras, top, mode, cmd, env_extra, snippet_map,
                     started, skip_rules=None):
-    args = cmd + ["--lint-only", "-Wall"]
+    # -Wno-fatal：警告不升级为致命错误，退出码只反映真 error，
+    # 否则纯 warn 的文件会以非零退出，被外层误判成 fail
+    args = cmd + ["--lint-only", "-Wall", "-Wno-fatal"]
     # 屏蔽指定规则（如生成文件名带 _tryN 后缀时屏蔽 DECLFILENAME）
     args += [f"-Wno-{r}" for r in (skip_rules or [])]
     if top:
@@ -318,8 +327,7 @@ def _lint_verilator(src, extras, top, mode, cmd, env_extra, snippet_map,
     issues = _parse_verilator(output, snippet_map)
 
     # 退出码非 0 但一条都没解析出来：verilator 本身崩了，兜底成未知错误
-    if cp.returncode != 0 and not any(
-            i["severity"] in ("error", "fatal") for i in issues):
+    if cp.returncode != 0 and not issues:
         err = make_unknown_error(output or "verilator lint failed", "compile")
         issues.append(_issue_from_11(err))
         return _result("fail", src, f"verilator({mode})", issues, started,

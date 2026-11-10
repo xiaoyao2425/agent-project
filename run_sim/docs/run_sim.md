@@ -64,8 +64,10 @@ docs/run_sim.md	调用规范+替换代码+边界条款+碰头会待确认清单�
 tests/	测试样例，内部分三层：
   - 根（fixtures，输入）：故意制造错误的坏文件样例，bad_*.v / tb_bad_*.v（W2 回归用）+ lint_semantic.v（语义级 Lint 样例）+ tb_fail_demo.v（assert_pass 断言失败样例）
   - tests/demos/（演示样例，自 json/demos 并入）：auto_fix/闭环演示用的坏文件（syntax_demo_a/b、timeout_demo*），fixed/ 为其修复副本
+  - tests/benchmark/（评测语料）：7 条标准样例（case01~04 规则命中 / case05 语义拒修 / case06 干净文件 / case07 复合错误），供 run_benchmark.py 使用
+  - tests/run_benchmark.py（评测器）：对 auto_fix 五维打分（成功率/轮数/耗时/源文件安全红线/JSON合规），用法 `python tests/run_benchmark.py`，当前成绩 7/7、修复率 5/5、平均 1.2 轮
   - tests/fixed/（输出）：auto_fix 的修复副本，运行可再生，可随时清空
-  - tests/evidence/（存档）：case1~6 实测 JSON 证据，11 字段标准格式，路径引用请勿挪动样例
+  - tests/evidence/（存档）：case1~7 实测 JSON 证据 + benchmark_report.json，11 字段标准格式，路径引用请勿挪动样例
 output/	运行时编译产物（sim_*），可再生垃圾，可随时清空
 ./waves/*.vcd	生成的 VCD 波形文件存放目录
 design/	        DUT 设计文件（mux.v / dff.v / counter.v）
@@ -113,9 +115,11 @@ testbench 中必须包含波形导出代码（$dumpfile/$dumpvars）
 一句话定位：输入 Verilog 源文件，输出标准结构化 JSON 的黑盒；本轮只做 Verilog（.vhd 明确返回 unsupported，架构留口子）。
 
 检查引擎（自动选择，无需配置；探测顺序见下）：
-- ① Windows PATH 里的 verilator（原生模式）→ ② WSL 里的 verilator → ③ 都没有则降级 iverilog -Wall（仅语法级），并在 data.note 里说明降级状态
-- Windows 原生安装 verilator：MSYS2 终端执行 pacman -S mingw-w64-ucrt-x86_64-verilator，再把 <MSYS2目录>\ucrt64\bin 加入 Windows PATH；WSL 方式为 sudo apt install verilator
-- 装好 verilator 后不改代码，下次调用自动升级为语义级检查（位宽不匹配、未驱动信号、悬空端口、锁存器推断等）
+- ① Windows PATH 里的 verilator（原生模式）→ ② MSYS2 已知路径（C:\msys64\ucrt64 等，自动配 VERILATOR_ROOT）→ ③ WSL 里的 verilator → ④ 都没有则降级 iverilog -Wall（仅语法级），并在 data.note 里说明降级状态
+- **本机已装 MSYS2 原生 verilator 5.050（C:\msys64\ucrt64），当前自动走 verilator(msys2) 语义级**；其他机器未装则自动降级 iverilog 语法级，接口不变
+- 命令内置 `-Wno-fatal`：警告不升级致命，纯 warn 文件返回 warn（不阻塞闭环），真 error 才返回 fail
+- 多文件联查若各文件互为独立顶层，verilator 会报 MULTITOP（warn）；属设计层级问题时用 `--top 顶层名` 指定入口即可消除
+- Windows 原生安装 verilator：MSYS2 终端执行 pacman -S mingw-w64-ucrt-x86_64-verilator；WSL 方式为 sudo apt install verilator
 
 调用方式：
 - 命令行：python api/lint.py <source.v> [依赖.v ...] [--top 顶层名] [--out 存档.json]（在 run_sim 目录下执行）

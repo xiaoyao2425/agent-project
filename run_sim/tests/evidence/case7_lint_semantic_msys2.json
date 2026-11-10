@@ -1,0 +1,81 @@
+{
+  "status": "warn",
+  "data": {
+    "source_file": "D:\\Users\\xiaoyaohu\\Desktop\\项目\\ai-agent\\run_sim\\tests\\lint_semantic.v",
+    "linter": "verilator(msys2)",
+    "lint_errors": [
+      {
+        "line": 15,
+        "column": 24,
+        "rule": "WIDTHEXPAND",
+        "severity": "warn",
+        "file": "lint_semantic.v",
+        "message": "Operator ADD expects 8 bits on the LHS, but LHS's VARREF 'a' generates 4 bits.",
+        "code_snippet": "assign sum_o   = a + b + 8'hFF;   // WIDTH: 8bit 常量加进 4bit 表达式",
+        "suggestion": "右侧位宽小于左侧、被自动零扩展：确认是有意为之，否则修改信号宽度"
+      },
+      {
+        "line": 15,
+        "column": 24,
+        "rule": "WIDTHEXPAND",
+        "severity": "warn",
+        "file": "lint_semantic.v",
+        "message": "Operator ADD expects 8 bits on the RHS, but RHS's VARREF 'b' generates 4 bits.",
+        "code_snippet": "assign sum_o   = a + b + 8'hFF;   // WIDTH: 8bit 常量加进 4bit 表达式",
+        "suggestion": "右侧位宽小于左侧、被自动零扩展：确认是有意为之，否则修改信号宽度"
+      },
+      {
+        "line": 15,
+        "column": 20,
+        "rule": "WIDTHTRUNC",
+        "severity": "warn",
+        "file": "lint_semantic.v",
+        "message": "Operator ASSIGNW expects 4 bits on the Assign RHS, but Assign RHS's ADD generates 8 bits.",
+        "code_snippet": "assign sum_o   = a + b + 8'hFF;   // WIDTH: 8bit 常量加进 4bit 表达式",
+        "suggestion": "右侧位宽大于左侧、高位被自动丢弃：会丢数据，加位或显式截取"
+      },
+      {
+        "line": 16,
+        "column": 20,
+        "rule": "WIDTHTRUNC",
+        "severity": "warn",
+        "file": "lint_semantic.v",
+        "message": "Operator ASSIGNW expects 4 bits on the Assign RHS, but Assign RHS's REPLICATE generates 8 bits.",
+        "code_snippet": "assign narrow  = {a, b};          // WIDTHTRUNC: 8bit 拼接塞进 4bit",
+        "suggestion": "右侧位宽大于左侧、高位被自动丢弃：会丢数据，加位或显式截取"
+      },
+      {
+        "line": 11,
+        "column": 16,
+        "rule": "UNUSEDSIGNAL",
+        "severity": "warn",
+        "file": "lint_semantic.v",
+        "message": "Signal is not used: 'narrow'",
+        "code_snippet": "wire [3:0] narrow;      // UNUSEDSIGNAL: 未使用",
+        "suggestion": "信号声明了但从未使用：删除，或按规范加 /* unused */ 标记"
+      },
+      {
+        "line": 12,
+        "column": 16,
+        "rule": "UNUSEDSIGNAL",
+        "severity": "warn",
+        "file": "lint_semantic.v",
+        "message": "Signal is not driven, nor used: 'wide'",
+        "code_snippet": "wire [7:0] wide;        // UNDRIVEN: 无驱动",
+        "suggestion": "信号声明了但从未使用：删除，或按规范加 /* unused */ 标记"
+      }
+    ],
+    "metrics": {
+      "latency_ms": 89,
+      "errors": 0,
+      "warnings": 6
+    }
+  },
+  "error": null,
+  "meta": {
+    "timestamp": "2026-11-05T20:11:54.909180+00:00",
+    "version": "1.0",
+    "source_file": "D:\\Users\\xiaoyaohu\\Desktop\\项目\\ai-agent\\run_sim\\tests\\lint_semantic.v",
+    "latency_ms": 89
+  }
+}
